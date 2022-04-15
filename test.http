@@ -22,3 +22,15 @@ query {
     }
   }
 }
+
+### Récupération d'un film via son identifiant
+POST {{ endpoint }}
+Content-Type: application/json
+X-REQUEST-TYPE: GraphQL
+
+query {
+  getMovie(id: 1){
+    title
+    description
+  }
+}
