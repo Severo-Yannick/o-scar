@@ -1,0 +1,25 @@
+{
+  "name": "o-scar",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "DEBUG=*,-nodemon*,-express*,-body-parser* npx nodemon"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Severo-Yannick/o-scar.git"
+  },
+  "author": "severo yannick",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Severo-Yannick/o-scar/issues"
+  },
+  "homepage": "https://github.com/Severo-Yannick/o-scar#readme",
+  "dependencies": {
+    "apollo-server": "^3.6.6",
+    "debug": "^4.3.4",
+    "dotenv": "^16.0.0",
+    "pg": "^8.7.3"
+  }
+}
