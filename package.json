@@ -4,7 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "DEBUG=*,-nodemon*,-express*,-body-parser* npx nodemon"
+    "dev": "DEBUG=*,-nodemon*,-express*,-body-parser* npx nodemon",
+    "initDB": "dropdb oscar; createdb oscar; npm run resetDB",
+    "resetDB": "psql -d oscar -f ./data/structure.sql; psql -d oscar -f ./data/migration_favorite.sql; psql -d oscar -f ./data/data.sql; DEBUG=seeding node data/generateMovieSeeding.js"
   },
   "repository": {
     "type": "git",
@@ -18,8 +20,18 @@
   "homepage": "https://github.com/Severo-Yannick/o-scar#readme",
   "dependencies": {
     "apollo-server": "^3.6.6",
+    "axios": "^0.26.1",
     "debug": "^4.3.4",
     "dotenv": "^16.0.0",
+    "faker": "^5.5.3",
     "pg": "^8.7.3"
+  },
+  "devDependencies": {
+    "eslint": "^8.5.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-import": "^2.25.3",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-prettier": "^4.0.0"
   }
 }

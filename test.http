@@ -7,11 +7,18 @@
 
 ### Requête de test
 # En graphQL on utilise toujours la méthode POST
-# C'est dans la body que l'on fournit la requête graphQL
+# C'est dans le body que l'on fournit la requête graphQL
 POST {{ endpoint }}
 Content-Type: application/json
 X-REQUEST-TYPE: GraphQL
 
-query QueryName {
-	getMovie
+query {
+  getAllCategories {
+    id
+    label
+    movies {
+      id
+      title
+    }
+  }
 }
