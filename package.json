@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "DEBUG=*,-nodemon*,-express*,-body-parser* npx nodemon",
+    "dev": "DEBUG=*,-nodemon*,-express*,-body-parser* npx nodemon -e js,gql",
     "initDB": "dropdb oscar; createdb oscar; npm run resetDB",
     "resetDB": "psql -d oscar -f ./data/structure.sql; psql -d oscar -f ./data/migration_favorite.sql; psql -d oscar -f ./data/data.sql; DEBUG=seeding node data/generateMovieSeeding.js"
   },
@@ -21,6 +21,7 @@
   "dependencies": {
     "apollo-server": "^3.6.6",
     "axios": "^0.26.1",
+    "bcrypt": "^5.0.1",
     "debug": "^4.3.4",
     "dotenv": "^16.0.0",
     "faker": "^5.5.3",

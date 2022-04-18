@@ -34,3 +34,16 @@ query {
     description
   }
 }
+
+### Inscription
+POST {{ endpoint }}
+Content-Type: application/json
+X-REQUEST-TYPE: GraphQL
+
+mutation {
+  signup(username: "Babar", email: "babar@github.io", password: "babarpass") {
+    id
+    username
+    email
+  }
+}

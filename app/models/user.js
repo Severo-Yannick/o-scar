@@ -1,4 +1,4 @@
-const client = require('../../../db/pg');
+const client = require('../db/pg');
 const CoreModel = require('./coreModel');
 
 /**
