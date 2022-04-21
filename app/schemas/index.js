@@ -8,6 +8,7 @@ const user = readFileSync(path.join(__dirname, './user.gql'));
 const review = readFileSync(path.join(__dirname, './review.gql'));
 const query = readFileSync(path.join(__dirname, './query.gql'));
 const mutation = readFileSync(path.join(__dirname, './mutation.gql'));
+const imdb = readFileSync(path.join(__dirname, './imdb.gql'));
 
 // Méthode gql fourni par le module et qui est éxecutée à travers un "tagged template"
 // C'est l'equivalent de gql(), mais avec des fonctionnalités supplémentaires
@@ -18,6 +19,7 @@ const typeDefs = gql`
   ${movie}
   ${user}
   ${review}
+  ${imdb}
   ${query}
   ${mutation}
 `;

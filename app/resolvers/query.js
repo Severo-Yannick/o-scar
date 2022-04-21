@@ -1,22 +1,18 @@
 const { AuthenticationError } = require('apollo-server');
 const bcrypt = require('bcrypt');
 
-const CategoryModel = require('../models/category');
-const MovieModel = require('../models/movie');
-const UserModel = require('../models/user');
-
 const jwt = require('../helpers/jwt');
 
 module.exports = {
-  async getAllCategories() {
-    const categories = await CategoryModel.findAll();
+  async getAllCategories(_, __, { dataSources }) {
+    const categories = await dataSources.category.findAll();
     return categories;
   },
 
-  async getMovie(_, args) {
+  async getMovie(_, args, { dataSources }) {
     // En 2eme argument des resolvers on retrouve la liste de l'ensemble des arguments
     // envoyés dans la requête utilisateur
-    const movie = await MovieModel.findByPk(args.id);
+    const movie = await dataSources.movie.findByPk(args.id);
     return movie;
   },
   // Le 3eme argument des resolvers est le contexte, il contient tous ce qui a été défini dans
@@ -25,7 +21,7 @@ module.exports = {
     const errorMessage = 'Authentication invalid';
     const { email, password } = args;
 
-    const users = await UserModel.findAll({ email });
+    const users = await context.dataSources.user.findAll({ email });
 
     if (!users.length) {
       throw new AuthenticationError(errorMessage);
@@ -45,5 +41,9 @@ module.exports = {
     user.token = jwt.create({ ...user, id: user.id, ip: context.ip });
 
     return user;
+  },
+  async searchImdb(_, args, { dataSources }) {
+    const movies = await dataSources.imdb.search(args.searchTerm);
+    return movies;
   },
 };

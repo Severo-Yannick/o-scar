@@ -1,0 +1,11 @@
+CATEGORY: label
+qualify, 0N CATEGORY, 0N MOVIE_SELECTION_INTERNAL
+:
+
+write, 0N MOVIE_SELECTION_INTERNAL, 0N USER: rating, content
+MOVIE_SELECTION_INTERNAL: codeIMDb, image, title, description, releaseDate
+:
+
+USER: username, email, password
+reference, 01 MOVIE_CATALOG_EXTERNAL, 11 MOVIE_SELECTION_INTERNAL
+MOVIE_CATALOG_EXTERNAL: codeIMDb, image, title, description, releaseDate

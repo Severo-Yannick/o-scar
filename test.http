@@ -51,6 +51,13 @@ query {
   getMovie(id: 1){
     title
     description
+    imdb {
+      Poster
+      Title
+      Ratings {
+        Value
+      }
+    }
   }
 }
 
@@ -109,5 +116,17 @@ mutation CreateReview($input: ReviewInput!){
     "movie_id": 1,
     "rating": 3,
     "content": "Test de critique"
+  }
+}
+
+### Recherche de film sur Omdb
+POST {{ endpoint }}
+Content-Type: application/json
+X-REQUEST-TYPE: GraphQL
+
+query {
+  searchImdb(searchTerm: "star wars"){
+    Title
+    Year
   }
 }

@@ -8,4 +8,5 @@ type Query {
   # Ces arguments sont typés, et peuvent être rendu obligatoire grâce au symbole !
   getMovie(id: Int!): Movie
   signin(email: String!, password: String!): UserConnected
+  searchImdb(searchTerm: String!): [ImdbSearchItem]
 }

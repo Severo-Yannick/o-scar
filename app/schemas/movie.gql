@@ -6,7 +6,7 @@ type Movie {
   release_year: Int!
   directors: String
   countries: String
-  imdb_id: String!
+  imdb: Imdb!
   created_at: String!
   updated_at: String
 }
