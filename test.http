@@ -5,6 +5,25 @@
 ################################################################################
 @endpoint = http://localhost:{{$dotenv PORT}}/graphql
 
+### Se connecter
+# @name signin
+POST {{ endpoint }}
+Content-Type: application/json
+X-REQUEST-TYPE: GraphQL
+
+query {
+  signin(email: "babar@github.io", password: "babarpass"){
+    username
+    token {
+      token
+      expiresIn
+    }
+  }
+}
+
+ ###
+ @authToken = {{signin.response.body.data.signin.token.token}}
+
 ### Requête de test
 # En graphQL on utilise toujours la méthode POST
 # C'est dans le body que l'on fournit la requête graphQL
@@ -51,6 +70,7 @@ mutation {
 ### Ajouter un nouveau film
 POST {{ endpoint }}
 Content-Type: application/json
+Authorization: Bearer {{authToken}}
 X-REQUEST-TYPE: GraphQL
 
 mutation CreateMovie($input: MovieInput!) {
@@ -67,5 +87,27 @@ mutation CreateMovie($input: MovieInput!) {
     "release_year": 1972,
     "image": "https://m.media-amazon.com/images/M/MV5BM2MyNjYxNmUtYTAwNi00MTYxLWJmNWYtYzZlODY3ZTk3OTFlXkEyXkFqcGdeQXVyNzkwMjQ5NzM@._V1_SY1000_CR0,0,704,1000_AL_.jpg",
     "imdb_id": "tt0068646"
+  }
+}
+
+### Ajouter une nouvelle critique
+POST {{ endpoint }}
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+X-REQUEST-TYPE: GraphQL
+
+mutation CreateReview($input: ReviewInput!){
+  createReview(input: $input){
+    id
+    rating
+    content
+  }
+}
+
+{
+  "input": {
+    "movie_id": 1,
+    "rating": 3,
+    "content": "Test de critique"
   }
 }

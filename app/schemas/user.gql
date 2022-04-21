@@ -5,3 +5,17 @@ type User {
   created_at: String!
   updated_at: String
 }
+
+type Token {
+  token: String!
+  expiresIn: String!
+}
+
+type UserConnected {
+  id: Int!
+  username: String!
+  email: String!
+  token: Token!
+  created_at: String!
+  updated_at: String
+}

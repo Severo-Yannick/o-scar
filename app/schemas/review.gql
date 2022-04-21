@@ -1,0 +1,13 @@
+type Review {
+  id: Int!
+  rating: Int!
+  content: String!
+  created_at: String!
+  updated_at: String
+}
+
+input ReviewInput {
+  rating: Int!
+  content: String!
+  movie_id: Int!
+}

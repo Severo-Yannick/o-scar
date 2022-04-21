@@ -3,5 +3,5 @@ type Mutation {
 
   # Afin de simplifié la mise en place d'une mutation on peut utiliser un objet complexe, qui sera déclaré en tant que Input et contiendra les règles de format de cet objet a fournir dans la mutation.
   createMovie(input: MovieInput!): Movie
-
+  createReview(input: ReviewInput): Review
 }

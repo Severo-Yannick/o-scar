@@ -5,6 +5,7 @@ const path = require('path');
 const category = readFileSync(path.join(__dirname, './category.gql'));
 const movie = readFileSync(path.join(__dirname, './movie.gql'));
 const user = readFileSync(path.join(__dirname, './user.gql'));
+const review = readFileSync(path.join(__dirname, './review.gql'));
 const query = readFileSync(path.join(__dirname, './query.gql'));
 const mutation = readFileSync(path.join(__dirname, './mutation.gql'));
 
@@ -16,6 +17,7 @@ const typeDefs = gql`
   ${category}
   ${movie}
   ${user}
+  ${review}
   ${query}
   ${mutation}
 `;
