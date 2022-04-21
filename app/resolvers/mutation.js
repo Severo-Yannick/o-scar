@@ -1,6 +1,7 @@
 const { UserInputError } = require('apollo-server');
 const bcrypt = require('bcrypt');
 const UserModel = require('../models/user');
+const MovieModel = require('../models/movie');
 
 module.exports = {
   async signup(_, args) {
@@ -24,4 +25,19 @@ module.exports = {
 
     return user;
   },
+  async createMovie(_, args) {
+    const data = args.input;
+
+    const movies = await MovieModel.findAll({ title: data.title });
+
+    if (movies.length) {
+      throw new UserInputError('A movie already exists with this title');
+    }
+
+    const newMovie = new MovieModel(data);
+
+    await newMovie.save();
+
+    return newMovie;
+},
 };

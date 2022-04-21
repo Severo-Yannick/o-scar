@@ -47,3 +47,25 @@ mutation {
     email
   }
 }
+
+### Ajouter un nouveau film
+POST {{ endpoint }}
+Content-Type: application/json
+X-REQUEST-TYPE: GraphQL
+
+mutation CreateMovie($input: MovieInput!) {
+  createMovie(input: $input) {
+    id
+    title
+  }
+}
+
+{
+  "input": {
+    "title": "The Godfather",
+    "description": "The aging patriarch of an organized crime dynasty transfers control of his clandestine empire to his reluctant son.",
+    "release_year": 1972,
+    "image": "https://m.media-amazon.com/images/M/MV5BM2MyNjYxNmUtYTAwNi00MTYxLWJmNWYtYzZlODY3ZTk3OTFlXkEyXkFqcGdeQXVyNzkwMjQ5NzM@._V1_SY1000_CR0,0,704,1000_AL_.jpg",
+    "imdb_id": "tt0068646"
+  }
+}
