@@ -41,6 +41,10 @@ module.exports = {
     return dataSources.movie.findByPk(args.id);
   },
 
+  async getMoviesByCategory(_, args, { dataSources }) {
+    return dataSources.movie.findByCategory(args.category_id);
+  },
+
   getReviewsByUser(_, args, { dataSources }) {
     return dataSources.review.findByUser(args.user_id);
   },
@@ -63,6 +67,9 @@ module.exports = {
   },
 
   getMyFavoriteMovies(_, __, { dataSources, user }) {
+    if (!user) {
+      throw new AuthenticationError('You must be authenticate to get your favorites');
+    }
     return dataSources.movie.findFavoriteMoviesByUser(user.id);
   },
 

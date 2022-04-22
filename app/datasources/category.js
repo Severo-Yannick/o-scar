@@ -12,7 +12,7 @@ class Category extends CoreSQLDataSource {
     }
     const query = this.knex(this.tableName)
       .connection(this.establishedConnection)
-      .select('*')
+      .select('category.*', 'movie_has_category.movie_id')
       .join('movie_has_category', 'category.id', '=', 'movie_has_category.category_id')
       .where('movie_id', movieId)
       .orderBy('category.label');
@@ -24,7 +24,7 @@ class Category extends CoreSQLDataSource {
   async findByMovieBulk(movieIds) {
     const query = this.knex(this.tableName)
       .connection(this.establishedConnection)
-      .select('*')
+      .select('category.*', 'movie_has_category.movie_id')
       .join('movie_has_category', 'category.id', '=', 'movie_has_category.category_id')
       .whereIn('movie_id', movieIds)
       .orderBy('category.label');

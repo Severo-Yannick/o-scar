@@ -15,7 +15,7 @@ type Query {
 
   # Récupération avec ses reviews et ses catégories
   "Récupération d'un film"
-  getMovie(id: ID!): Movie
+  getMovie(id: PositiveInt!): Movie
 
   # Sur la page ajout de film
   "Recherche des films sur imdb"
@@ -25,16 +25,16 @@ type Query {
   getAllCategories(skip: PositiveInt, take: PositiveInt): [Category!]!
 
   "Récupération d'une catégorie"
-  getCategory(id: ID!): Category
+  getCategory(id: PositiveInt!): Category
 
   "Liste des films d'une catégorie"
-  getMoviesByCategory: [Movie!]!
+  getMoviesByCategory(category_id: PositiveInt!): [Movie!]!
 
   "Liste des critiques d'un utilisateur"
-  getReviewsByUser(user_id: ID!): [Review!]!
+  getReviewsByUser(user_id: PositiveInt!): [Review!]!
 
   "Récupération d'un utilisateur via son ID"
-  user(id: ID!): User
+  user(id: PositiveInt!): User
 
   "Type scalaire Year"
   echoYear(year: Year!): Year!

@@ -62,7 +62,7 @@ class Review extends CoreSQLDataSource {
 
   userIdLoader = new DataLoader(async (ids) => {
     const intIds = ids.map((id) => parseInt(id, 10));
-    const records = await this.findByMovieBulk(intIds);
+    const records = await this.findByUserBulk(intIds);
 
     return intIds.map((id) => records.filter((record) => record.user_id === id));
   });
