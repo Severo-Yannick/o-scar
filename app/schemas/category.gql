@@ -6,9 +6,9 @@ type Category {
   # - On précise la liste des propriété de cette entité
   # - Le type des ces propriétés
   # - Ainsi que l'obligation de présence des ceux-ci avec le signe ! juste après le type
-  id: Int!
+  id: PositiveInt!
   label: String!
-  created_at: String!
-  updated_at: String
-  movies: [Movie]
+  created_at: DateTime!
+  updated_at: DateTime
+  movies: [Movie!]!
 }

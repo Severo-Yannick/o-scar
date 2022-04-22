@@ -1,4 +1,5 @@
 BEGIN;
+
 INSERT INTO
   "category" ("label")
 VALUES
@@ -84,4 +85,5 @@ VALUES
   ('Sérial'),
   ('Troma'),
   ('Western');
+
 COMMIT;

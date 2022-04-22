@@ -1,30 +1,19 @@
-const { AuthenticationError } = require('apollo-server');
 const bcrypt = require('bcrypt');
-
+const { UserInputError, AuthenticationError } = require('apollo-server');
 const jwt = require('../helpers/jwt');
 
 module.exports = {
-  async getAllCategories(_, __, { dataSources }) {
-    const categories = await dataSources.category.findAll();
-    return categories;
+  user(_, args, { dataSources }) {
+    return dataSources.user.findByPk(args.id);
   },
 
-  async getMovie(_, args, { dataSources }) {
-    // En 2eme argument des resolvers on retrouve la liste de l'ensemble des arguments
-    // envoyés dans la requête utilisateur
-    const movie = await dataSources.movie.findByPk(args.id);
-    return movie;
-  },
-  // Le 3eme argument des resolvers est le contexte, il contient tous ce qui a été défini dans
-  // la méthode context fourni au server Apollo
-  async signin(_, args, context) {
+  async signin(_, args, { dataSources, ip }) {
     const errorMessage = 'Authentication invalid';
     const { email, password } = args;
 
-    const users = await context.dataSources.user.findAll({ email });
-
+    const users = await dataSources.user.findAll({ email });
     if (!users.length) {
-      throw new AuthenticationError(errorMessage);
+      throw new UserInputError(errorMessage);
     }
 
     const user = users[0];
@@ -34,16 +23,50 @@ module.exports = {
     if (!result) {
       throw new AuthenticationError(errorMessage);
     }
-
-    // Ajout manuellement de l'id, afin de déclencher le getter de l'instance de user
-    // Pour l'ip contrairement a un controller dans express, je n'est pas d'argument req.
-    // Mais heureusement il y a un autre moyen de récupérer une information contextuelle
-    user.token = jwt.create({ ...user, id: user.id, ip: context.ip });
+    // La propriété id n'est pas une propriété, mais un getter, il faut donc l'ajouter manuellement
+    // Avec les dataSources l'id est redevenu un paramètre,
+    // on peut donc le retirer de façon manuelle
+    user.token = jwt.create({ ...user, ip });
 
     return user;
   },
-  async searchImdb(_, args, { dataSources }) {
-    const movies = await dataSources.imdb.search(args.searchTerm);
-    return movies;
+
+  async getAllMovies(_, args, { dataSources }) {
+    const params = { ...args };
+    const data = await dataSources.movie.findAll(params);
+    return data;
+  },
+
+  async getMovie(_, args, { dataSources }) {
+    return dataSources.movie.findByPk(args.id);
+  },
+
+  getReviewsByUser(_, args, { dataSources }) {
+    return dataSources.review.findByUser(args.user_id);
+  },
+
+  getAllCategories(_, args, { dataSources }) {
+    const params = { ...args };
+    return dataSources.category.findAll(params);
+  },
+
+  getCategory(_, args, { dataSources }) {
+    return dataSources.category.findByPk(args.id);
+  },
+
+  searchImdb(_, args, { dataSources }) {
+    return dataSources.imdb.search(args.searchTerm);
+  },
+
+  echoYear(_, { year }) {
+    return year;
+  },
+
+  getMyFavoriteMovies(_, __, { dataSources, user }) {
+    return dataSources.movie.findFavoriteMoviesByUser(user.id);
+  },
+
+  getAllFavorites(_, __, { dataSources }) {
+    return dataSources.favorite.findAll();
   },
 };

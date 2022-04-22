@@ -1,10 +1,10 @@
-# Les données qui proviennent de l'API OMDb sont toutes forcéement présentes (même si c'est vide) et leur format est forcéement en string.
 type ImdbSearchItem {
   Poster: String!
   Title: String!
   Type: String!
   Year: String!
-  imdbID: String!
+  imdbID: ID!
+  movie: Movie
 }
 
 type ImdbRating {
@@ -31,11 +31,12 @@ type Imdb {
   Metascore: String!
   imdbRating: String!
   imdbVotes: String!
-  imdbID: String!
+  imdbID: ID!
   Type: String!
   DVD: String!
   BoxOffice: String!
   Production: String!
   Website: String!
   Response: String!
+  movie: Movie
 }

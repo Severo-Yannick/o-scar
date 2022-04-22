@@ -1,28 +1,24 @@
-const { RESTDataSource } = require('apollo-datasource-rest');
-const debug = require('debug')('REST');
+const MyRESTDataSource = require('./core/rest');
 
-class Imdb extends RESTDataSource {
+class Imdb extends MyRESTDataSource {
   constructor() {
     super();
-    this.baseURL = 'https://www.omdbapi.com';
-  }
-
-  didReceiveResponse(res, req) {
-    debug(req.url);
-    return super.didReceiveResponse(res, req);
-  }
-
-  async search(searchTerm) {
-    // Ici il va faire un fetch
-    const response = await this.get(`?s=${searchTerm}&apikey=${process.env.OMDB_API_KEY}`);
-    // Pour rappel l'API Omdb renvoi le tableau de film dans une propriété "Search" de la
-    // reponse en JSON
-    return response.Search;
+    this.baseURL = ' https://www.omdbapi.com';
   }
 
   async findByPk(id) {
-    const response = await this.get(`?i=${id}&apikey=${process.env.OMDB_API_KEY}`);
-    return response;
+    // Le cache est tributaire du cache des headers de la réponse à la requête HTTP
+    // ici
+    // cache-control: max-age=86400
+    return this.get(`?i=${id}&apikey=${process.env.OMDB_API_KEY}`);
+  }
+
+  async search(searchTerm) {
+    // Le cache est tributaire du cache des headers de la réponse à la requête HTTP
+    // ici
+    // cache-control: max-age=3600
+    const response = await this.get(`?s=${searchTerm}&apikey=${process.env.OMDB_API_KEY}`);
+    return response.Search;
   }
 }
 

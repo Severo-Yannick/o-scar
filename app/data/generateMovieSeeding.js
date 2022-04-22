@@ -127,19 +127,19 @@ async function insertUsers(users) {
              )
              VALUES
              (
-                'Yann',
-                'yann@github.io',
-                '$2b$10$h4Dh2fRGAf4YdC.Cqg1yleq41QHmG61B76THHCp03SgMEizvZlscy'
+                 'Yann',
+                 'yann@github.io',
+                 '$2b$10$h4Dh2fRGAf4YdC.Cqg1yleq41QHmG61B76THHCp03SgMEizvZlscy'
              ),-- superpass
              (
-                'Noé',
-                'noe@github.io',
-                '$2b$10$h4Dh2fRGAf4YdC.Cqg1yleq41QHmG61B76THHCp03SgMEizvZlscy'
+                 'Noé',
+                 'noe@github.io',
+                 '$2b$10$h4Dh2fRGAf4YdC.Cqg1yleq41QHmG61B76THHCp03SgMEizvZlscy'
              ), -- superpass
              (
-                'Quentin',
-                'quentin@github.io',
-                '$2b$10$h4Dh2fRGAf4YdC.Cqg1yleq41QHmG61B76THHCp03SgMEizvZlscy'
+                 'Quentin',
+                 'quentin@github.io',
+                 '$2b$10$h4Dh2fRGAf4YdC.Cqg1yleq41QHmG61B76THHCp03SgMEizvZlscy'
              ), -- superpass
              ${userValues}
              RETURNING id
@@ -177,8 +177,8 @@ async function insertMovieCategories(movieCategories) {
   await db.query('TRUNCATE TABLE "movie_has_category" RESTART IDENTITY CASCADE');
   const categoryValues = movieCategories.map(
     (movieCategory) => `(
-            ${movieCategory.movieId},
-            ${movieCategory.categoryId}
+             ${movieCategory.movieId},
+             ${movieCategory.categoryId}
          )`,
   );
 

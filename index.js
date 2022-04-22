@@ -1,12 +1,13 @@
 require('dotenv').config();
 const { ApolloServer } = require('apollo-server');
-const debug = require('debug')('server');
+const debug = require('debug')('app:server');
 const app = require('./app');
 
-const PORT = process.env.PORT ?? 4000;
+const port = process.env.PORT ?? 3000;
 
 const server = new ApolloServer(app);
 
-server.listen(PORT).then(({ url }) => {
-  debug(`Server ready at ${url}`);
+// The `listen` method launches a web server.
+server.listen(port).then(({ url }) => {
+  debug(`🚀  Server ready at ${url}`);
 });

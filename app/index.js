@@ -1,17 +1,22 @@
-const typeDefs = require('./schemas');
-const resolvers = require('./resolvers');
-const jwt = require('./helpers/jwt');
+const { UserInputError, AuthenticationError } = require('apollo-server');
+const depthLimit = require('graphql-depth-limit');
 
 const db = require('./db/pg');
+const jwt = require('./helpers/jwt');
 
-const ImdbDatasource = require('./datasources/imdb');
+const typeDefs = require('./schemas');
+const resolvers = require('./resolvers');
+
 const CategoryDatasource = require('./datasources/category');
+const ImdbDatasource = require('./datasources/imdb');
 const MovieDatasource = require('./datasources/movie');
 const ReviewDatasource = require('./datasources/review');
+const FavoriteDatasource = require('./datasources/favorite');
 const UserDatasource = require('./datasources/user');
 
+const logger = require('./helpers/logger');
+
 const knexConfig = {
-  // Knex utilisera le module pg pour se connecter, formater et executer les requêtes
   client: 'pg',
   establishedConnection: db,
 };
@@ -19,27 +24,40 @@ const knexConfig = {
 module.exports = {
   typeDefs,
   resolvers,
-  // On peut déclarer une méthode de context (forcément nommé "context")
-  // Cette méthode sera exécuté a chaque nouvelle requête
+  dataSources: () => ({
+    category: new CategoryDatasource(knexConfig),
+    imdb: new ImdbDatasource(),
+    movie: new MovieDatasource(knexConfig),
+    review: new ReviewDatasource(knexConfig),
+    favorite: new FavoriteDatasource(knexConfig),
+    user: new UserDatasource(knexConfig),
+  }),
   context: ({ req }) => {
     const ctx = {
       ...req,
       ip: req.headers['x-forwarded-for']
         ? req.headers['x-forwarded-for'].split(/, /)[0]
         : req.connection.remoteAddress,
-      // A chaque requête on verifie que l'on a bien un token, si oui on récupère l'utilisateur
-      // correspondant
       user: jwt.get(req),
     };
     return ctx;
   },
-  // Ce qui est fourni dans la propriété dataSources ici, sera disponible dans le context sous une
-  // propriété "dataSources"
-  dataSources: () => ({
-    imdb: new ImdbDatasource(),
-    category: new CategoryDatasource(knexConfig),
-    movie: new MovieDatasource(knexConfig),
-    review: new ReviewDatasource(knexConfig),
-    user: new UserDatasource(knexConfig),
-  }),
+  formatError: (err) => {
+    logger.error(err);
+    if (!(err instanceof UserInputError || err instanceof AuthenticationError)) {
+      if (!['production', 'test'].includes(process.env.NODE_ENV)) {
+        return err;
+      }
+      return 'Internal server error';
+    }
+    return err.message;
+  },
+  plugins: [
+    {
+      async requestDidStart() {
+        db.queryCount = 0;
+      },
+    },
+  ],
+  validationRules: [depthLimit(5)],
 };

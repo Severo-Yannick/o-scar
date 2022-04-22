@@ -1,12 +1,11 @@
 BEGIN;
-
 DROP TABLE IF EXISTS "user",
 "movie",
 "category",
 "movie_has_category",
+"user_has_movie",
 "review",
-"favorite";
-
+"reviews";
 CREATE TABLE "user" (
   "id" INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
   "username" TEXT NOT NULL UNIQUE,
@@ -15,25 +14,24 @@ CREATE TABLE "user" (
   "created_at" TIMESTAMPTZ NOT NULL DEFAULT now(),
   "updated_at" TIMESTAMPTZ
 );
-
 CREATE TABLE "movie" (
   "id" INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
   "image" TEXT NOT NULL,
   "title" TEXT NOT NULL,
   "description" TEXT,
   "release_year" INT NOT NULL,
+  "directors" TEXT,
+  "countries" TEXT,
   "imdb_id" TEXT NOT NULL,
   "created_at" TIMESTAMPTZ NOT NULL DEFAULT now(),
   "updated_at" TIMESTAMPTZ
 );
-
 CREATE TABLE "category" (
   "id" INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
   "label" TEXT NOT NULL UNIQUE,
   "created_at" TIMESTAMPTZ NOT NULL DEFAULT now(),
   "updated_at" TIMESTAMPTZ
 );
-
 CREATE TABLE "movie_has_category" (
   "id" INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
   "movie_id" INT NOT NULL REFERENCES "movie" ("id") ON DELETE CASCADE,
@@ -41,7 +39,6 @@ CREATE TABLE "movie_has_category" (
   "created_at" TIMESTAMPTZ NOT NULL DEFAULT now(),
   UNIQUE("movie_id", "category_id")
 );
-
 CREATE TABLE "review" (
   "id" INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
   "user_id" INT NOT NULL REFERENCES "user" ("id") ON DELETE CASCADE,
@@ -51,5 +48,4 @@ CREATE TABLE "review" (
   "created_at" TIMESTAMPTZ NOT NULL DEFAULT now(),
   UNIQUE("user_id", "movie_id")
 );
-
 COMMIT;

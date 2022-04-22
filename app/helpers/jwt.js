@@ -41,7 +41,7 @@ module.exports = {
         throw new AuthenticationError('Token expired');
       }
     } else if (typeof request.header('authorization') !== 'undefined') {
-      throw new AuthenticationError('Token expired');
+      throw new AuthenticationError('Missing token');
     }
     return null;
   },

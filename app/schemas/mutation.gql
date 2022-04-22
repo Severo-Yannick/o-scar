@@ -1,7 +1,16 @@
+"Ajouter/modifier/supprimer des données"
 type Mutation {
-  signup(email: String!, username: String!, password: String!): User
+  # Il est possible de définir un type custom pour éviter de passer tout les paramètres un à un
+  # https://graphql.org/graphql-js/mutations-and-input-
+  # Les mutations renvoient aussi un objet
+  "Inscription"
+  signup(input: UserInput): User
 
-  # Afin de simplifié la mise en place d'une mutation on peut utiliser un objet complexe, qui sera déclaré en tant que Input et contiendra les règles de format de cet objet a fournir dans la mutation.
-  createMovie(input: MovieInput!): Movie
+  "Ajout d'un film à la sélection"
+  createMovie(input: MovieInput): Movie
+
+  "Ajouter une critique de film"
   createReview(input: ReviewInput): Review
+
+  addToMyFavorites(movie_id: PositiveInt): Movie
 }

@@ -4,11 +4,11 @@ const CoreSQLDataSource = require('./core/sql');
 const SECONDS = 10;
 
 class Review extends CoreSQLDataSource {
-  tableName = 'review';
+  tableName = 'favorite';
 
-  async findByMovie(movieId, { asc }) {
+  async findByMovie(movieId) {
     if (process.env.DATALOADER_ENABLED) {
-      return this.movieIdLoader.load({ movieId, asc });
+      return this.movieIdLoader.load(movieId);
     }
     const query = this.knex(this.tableName)
       .connection(this.establishedConnection)
@@ -19,20 +19,19 @@ class Review extends CoreSQLDataSource {
     return result;
   }
 
-  async findByMovieBulk(movieIds, asc) {
+  async findByMovieBulk(movieIds) {
     const query = this.knex(this.tableName)
       .connection(this.establishedConnection)
       .select('*')
-      .whereIn('movie_id', movieIds)
-      .orderBy('created_at', asc ? 'asc' : 'desc');
+      .whereIn('movie_id', movieIds);
 
     const result = await (process.env.CACHE_ENABLED ? query.cache(SECONDS) : query);
     return result;
   }
 
-  movieIdLoader = new DataLoader(async (keys) => {
-    const intIds = keys.map((k) => parseInt(k.movieId, 10));
-    const records = await this.findByMovieBulk(intIds, keys[0].asc);
+  movieIdLoader = new DataLoader(async (ids) => {
+    const intIds = ids.map((id) => parseInt(id, 10));
+    const records = await this.findByMovieBulk(intIds);
 
     return intIds.map((id) => records.filter((record) => record.movie_id === id));
   });

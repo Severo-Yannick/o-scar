@@ -52,6 +52,3 @@ class Category extends CoreModel {
 Category.init({ client });
 
 module.exports = Category;
-
-
-app/index.js app/models/category.js app/models/coreModel.js app/models/movie.js app/models/review.js app/models/user.js app/resolvers/category.js app/resolvers/index.js app/resolvers/mutation.js app/resolvers/query.js app/schemas/index.js app/schemas/movie.gql app/schemas/query.gql package.json test.http

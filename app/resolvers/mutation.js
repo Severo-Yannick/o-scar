@@ -1,9 +1,9 @@
-const { UserInputError, AuthenticationError } = require('apollo-server');
 const bcrypt = require('bcrypt');
+const { UserInputError, AuthenticationError } = require('apollo-server');
 
 module.exports = {
   async signup(_, args, { dataSources }) {
-    const { username, email, password } = args;
+    const { username, email, password } = args.input;
 
     const users = await dataSources.user.findAll({ $or: { username, email } });
 
@@ -13,17 +13,20 @@ module.exports = {
 
     const encryptedPassword = await bcrypt.hash(password, 10);
 
-    const user = dataSources.user.insert({ username, email, password: encryptedPassword });
+    const userData = {
+      username,
+      email,
+      password: encryptedPassword,
+    };
 
-    // Ici ce n'est pas forcéement necéssaire, car on maitrise la possibilité de récupération au
-    // niveau des schémas
-    delete user.password;
+    const user = await dataSources.user.insert(userData);
 
     return user;
   },
-  async createMovie(_, args, { user, dataSources }) {
+
+  async createMovie(_, args, { dataSources, user }) {
     if (!user) {
-      throw new AuthenticationError('You must be connected to add a movie');
+      throw new AuthenticationError('You must be authenticate to add a movie');
     }
 
     const data = args.input;
@@ -34,16 +37,22 @@ module.exports = {
       throw new UserInputError('A movie already exists with this title');
     }
 
-    const newMovie = dataSources.movie.insert(data);
+    const { category_ids: categoryIds, ...movieData } = data;
+
+    const newMovie = await dataSources.movie.insert(movieData);
+
+    await dataSources.movie.addCategories(newMovie.id, categoryIds);
 
     return newMovie;
   },
-  async createReview(_, args, { user, dataSources }) {
+
+  async createReview(_, args, { dataSources, user }) {
     if (!user) {
-      throw new AuthenticationError('You must be connected to add a review');
+      throw new AuthenticationError('You must be authenticate to add a review');
     }
 
     const data = args.input;
+
     const movie = await dataSources.movie.findByPk(data.movie_id);
 
     if (!movie) {
@@ -59,8 +68,30 @@ module.exports = {
       throw new UserInputError('User has already review this movie');
     }
 
-    const review = dataSources.review.insert({ ...data, user_id: user.id });
+    return dataSources.review.insert({ ...data, user_id: user.id });
+  },
 
-    return review;
+  async addToMyFavorites(_, args, { dataSources, user }) {
+    if (!user) {
+      throw new AuthenticationError('You must be authenticate to add a review');
+    }
+
+    const movie = await dataSources.movie.findByPk(args.movie_id);
+
+    if (!movie) {
+      throw new UserInputError(`No movie with the id : ${args.movie_id}`);
+    }
+
+    const favorites = await dataSources.favorite.findAll({
+      user_id: user.id,
+      movie_id: args.movie_id,
+    });
+
+    if (favorites.length) {
+      throw new UserInputError('User has already add this movie to favorite');
+    }
+
+    await dataSources.favorite.insert({ ...args, user_id: user.id });
+    return movie;
   },
 };
