@@ -98,7 +98,7 @@ class Movie extends CoreSQLDataSource {
     }
     const query = this.knex(this.tableName)
       .connection(this.establishedConnection)
-      .select('*')
+      .select('movie.*', 'favorite.user_id')
       .join('favorite', 'movie.id', '=', 'favorite.movie_id')
       .where('user_id', userId);
 
@@ -109,7 +109,7 @@ class Movie extends CoreSQLDataSource {
   async findFavoriteMoviesByUserBulk(userIds) {
     const query = this.knex(this.tableName)
       .connection(this.establishedConnection)
-      .select('*')
+      .select('movie.*', 'favorite.user_id')
       .join('favorite', 'movie.id', '=', 'favorite.movie_id')
       .whereIn('user_id', userIds);
 
