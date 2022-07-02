@@ -95,6 +95,21 @@ query GetMovie($id: PositiveInt!){
   "id": 1
 }
 
+### Récupération de film par catégorie
+POST {{ endpoint }}
+Content-Type: application/json
+X-REQUEST-TYPE: GraphQL
+
+query GetMovieByCategory($category_id: PositiveInt!){
+  getMoviesByCategory(category_id: $category_id) {
+    id
+    title
+  }
+}
+
+{
+  "category_id": 1
+}
 
 ### Récupération des critiques d'un utilisateur
 POST {{ endpoint }}
